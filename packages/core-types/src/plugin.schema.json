@@ -6203,5 +6203,32 @@
         }
       }
     }
+  },
+  "IEncryptedStorage": {
+    "components": {
+      "schemas": {
+        "IEncryptAndStoreDataArgs": {
+          "type": "object",
+          "properties": {
+            "data": {},
+            "keyPair": {}
+          },
+          "required": [
+            "data"
+          ]
+        }
+      },
+      "methods": {
+        "encryptAndStoreData": {
+          "description": "",
+          "arguments": {
+            "$ref": "#/components/schemas/IEncryptAndStoreDataArgs"
+          },
+          "returnType": {
+            "type": "string"
+          }
+        }
+      }
+    }
   }
 }
