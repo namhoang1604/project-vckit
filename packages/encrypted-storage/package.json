@@ -37,6 +37,7 @@
   "dependencies": {
     "@vckit/core-types": "workspace:*",
     "@veramo/data-store": "^5.2.0",
+    "@veramo/key-manager": "^5.1.2",
     "@veramo/utils": "^5.2.0",
     "typeorm": "^0.3.10",
     "uuid": "^9.0.0"

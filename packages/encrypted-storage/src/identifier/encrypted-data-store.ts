@@ -15,9 +15,13 @@ export class EncryptedDataStore {
     type: string;
   }): Promise<void> {
     const { data, publicKeyHex, type } = args;
+
+    const encryptedData = new EncryptedData();
+    encryptedData.publicKeyHex = publicKeyHex;
+    encryptedData.type = type;
+    encryptedData.jwe = data;
+
     const db = await getConnectedDb(this.dbConnection);
-    await db
-      .getRepository(EncryptedData)
-      .save({ publicKeyHex, type, jwe: data });
+    await db.getRepository(EncryptedData).save(encryptedData);
   }
 }
