@@ -7,6 +7,13 @@ export interface IEncryptAndStoreDataArgs {
   type?: TKeyType;
 }
 
+export interface IEncrypteAndStoreDataResult {
+  id: string;
+  key: string;
+}
+
 export interface IEncryptedStorage extends IPluginMethodMap {
-  encryptAndStoreData(args: IEncryptAndStoreDataArgs): Promise<string>;
+  encryptAndStoreData(
+    args: IEncryptAndStoreDataArgs
+  ): Promise<IEncrypteAndStoreDataResult>;
 }

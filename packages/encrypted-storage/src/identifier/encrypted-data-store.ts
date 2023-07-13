@@ -9,19 +9,19 @@ import { getConnectedDb } from '../utils.js';
 export class EncryptedDataStore {
   constructor(private dbConnection: OrPromise<DataSource>) {}
 
-  async saveEncryptedData(args: {
-    data: string;
-    publicKeyHex: string;
-    type: string;
-  }): Promise<void> {
-    const { data, publicKeyHex, type } = args;
-
+  async saveEncryptedData(data: string): Promise<EncryptedData> {
     const encryptedData = new EncryptedData();
-    encryptedData.publicKeyHex = publicKeyHex;
-    encryptedData.type = type;
-    encryptedData.jwe = data;
+    encryptedData.data = data;
 
     const db = await getConnectedDb(this.dbConnection);
-    await db.getRepository(EncryptedData).save(encryptedData);
+    return await db.getRepository(EncryptedData).save(encryptedData);
+  }
+
+  async getEncryptedData(id: string): Promise<string | undefined> {
+    const db = await getConnectedDb(this.dbConnection);
+    const encryptedData = await db
+      .getRepository(EncryptedData)
+      .findOneBy({ id });
+    return encryptedData?.data;
   }
 }

@@ -2,10 +2,15 @@ import { EncryptedDataStore } from './identifier/encrypted-data-store.js';
 import {
   IAgentPlugin,
   IEncryptAndStoreDataArgs,
+  IEncrypteAndStoreDataResult,
   IEncryptedStorage,
 } from '@vckit/core-types';
 import schema from '@vckit/core-types/build/plugin.schema.json' assert { type: 'json' };
-import { KeyManager } from '@veramo/key-manager';
+import {
+  decryptString,
+  encryptString,
+  generateEncryptionKey,
+} from '@govtechsg/oa-encryption';
 import { OrPromise } from '@veramo/utils';
 import { DataSource } from 'typeorm';
 
@@ -17,37 +22,36 @@ export class EncryptedStorage implements IAgentPlugin {
   readonly schema = schema.IEncryptedStorage;
 
   private store: EncryptedDataStore;
-  private keyManager: KeyManager;
-  constructor(options: {
-    dbConnection: OrPromise<DataSource>;
-    keyManager: KeyManager;
-  }) {
+  constructor(options: { dbConnection: OrPromise<DataSource> }) {
     this.store = new EncryptedDataStore(options.dbConnection);
-    this.keyManager = options.keyManager;
     this.methods = {
       encryptAndStoreData: this.encryptAndStoreData.bind(this),
+      fetchEncryptedData: this.fetchEncryptedData.bind(this),
     };
   }
 
-  async encryptAndStoreData(args: IEncryptAndStoreDataArgs): Promise<string> {
+  async encryptAndStoreData(
+    args: IEncryptAndStoreDataArgs
+  ): Promise<IEncrypteAndStoreDataResult> {
     const { data, kms, type } = args;
-    const key = await this.keyManager.keyManagerCreate({
-      kms: kms || 'local',
-      type: type || 'Ed25519',
-    });
+    const key = generateEncryptionKey();
 
-    const encryptedData = await this.keyManager.keyManagerEncryptJWE({
-      kid: key.kid,
-      to: key,
-      data: JSON.stringify(data),
-    });
+    const encryptedDocument = encryptString(JSON.stringify(data), key);
 
-    await this.store.saveEncryptedData({
-      data: encryptedData,
-      publicKeyHex: key.publicKeyHex,
-      type: key.type,
-    });
+    const { id } = await this.store.saveEncryptedData(
+      JSON.stringify(encryptedDocument)
+    );
 
-    return key.publicKeyHex;
+    return { id, key };
+  }
+
+  async fetchEncryptedData(args: { id: string; key: string }): Promise<string> {
+    const { id, key } = args;
+    const encryptedData = await this.store.getEncryptedData(id);
+    if (!encryptedData) {
+      throw new Error('Data not found');
+    }
+
+    return encryptedData;
   }
 }

@@ -17,9 +17,8 @@ export class CreateDatabase1688974564000 implements MigrationInterface {
       new Table({
         name: migrationGetTableName(queryRunner, 'encrypted-data'),
         columns: [
-          { name: 'publicKeyHex', type: 'varchar', isPrimary: true },
-          { name: 'type', type: 'varchar', isNullable: false },
-          { name: 'jwe', type: 'varchar', isNullable: false },
+          { name: 'id', type: 'varchar', isPrimary: true },
+          { name: 'data', type: 'varchar', isNullable: false },
           { name: 'saveDate', type: dateTimeType },
           { name: 'updateDate', type: dateTimeType },
         ],

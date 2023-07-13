@@ -4,19 +4,16 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity('encrypted-data')
 export class EncryptedData extends BaseEntity {
-  @PrimaryColumn()
-  publicKeyHex!: string;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column()
-  type!: string;
-
-  @Column()
-  jwe!: string;
+  data!: string;
 
   @BeforeInsert()
   setSaveDate() {
