@@ -11,6 +11,7 @@ import { formatRelative } from 'date-fns'
 import { ProCard } from '@ant-design/pro-components'
 import CredentialActionsDropdown from './CredentialActionsDropdown'
 import CredentialRender from './CredentialRender'
+import CredentialAppleWallet from './CredentialAppleWallet'
 
 interface CredentialTabsProps {
   credential: Vcred
@@ -65,6 +66,11 @@ const CredentialTabs: React.FC<CredentialTabsProps> = ({
           key: '3',
           label: 'Rendered',
           children: <CredentialRender credential={credential} hash={hash} />,
+        },
+        {
+          key: '4',
+          label: 'Apple wallet',
+          children: <CredentialAppleWallet hash={hash} />,
         },
       ]}
     />
