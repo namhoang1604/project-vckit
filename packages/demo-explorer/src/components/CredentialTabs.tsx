@@ -22,59 +22,60 @@ const CredentialTabs: React.FC<CredentialTabsProps> = ({
   credential,
   hash,
 }) => {
-  return (
-    <Tabs
-      items={[
-        {
-          key: '0',
-          label: 'Pretty',
-          children: (
-            <ProCard
-              title={<IdentifierProfile did={getIssuerDID(credential)} />}
-              extra={
-                <Row align={'middle'}>
-                  <div>
-                    {formatRelative(
-                      new Date(credential.issuanceDate),
-                      new Date(),
-                    )}
-                  </div>{' '}
-                  <CredentialActionsDropdown credential={credential}>
-                    <Button type="text">
-                      {/* @ts-ignore FIXME: why is ts complaining about this? */}
-                      <EllipsisOutlined />
-                    </Button>
-                  </CredentialActionsDropdown>
-                </Row>
-              }
-            >
-              <VerifiableCredential credential={credential} />
-            </ProCard>
-          ),
-        },
-        {
-          key: '1',
-          label: 'Info',
-          children: <CredentialInfo credential={credential} hash={hash} />,
-        },
-        {
-          key: '2',
-          label: 'Data',
-          children: <JsonBlock title="Raw JSON" data={credential} />,
-        },
-        {
-          key: '3',
-          label: 'Rendered',
-          children: <CredentialRender credential={credential} hash={hash} />,
-        },
-        {
-          key: '4',
-          label: 'Apple wallet',
-          children: <CredentialAppleWallet hash={hash} />,
-        },
-      ]}
-    />
-  )
+  const tabs = [
+    {
+      key: '0',
+      label: 'Pretty',
+      children: (
+        <ProCard
+          title={<IdentifierProfile did={getIssuerDID(credential)} />}
+          extra={
+            <Row align={'middle'}>
+              <div>
+                {formatRelative(new Date(credential.issuanceDate), new Date())}
+              </div>{' '}
+              <CredentialActionsDropdown credential={credential}>
+                <Button type="text">
+                  {/* @ts-ignore FIXME: why is ts complaining about this? */}
+                  <EllipsisOutlined />
+                </Button>
+              </CredentialActionsDropdown>
+            </Row>
+          }
+        >
+          <VerifiableCredential credential={credential} />
+        </ProCard>
+      ),
+    },
+    {
+      key: '1',
+      label: 'Info',
+      children: <CredentialInfo credential={credential} hash={hash} />,
+    },
+    {
+      key: '2',
+      label: 'Data',
+      children: <JsonBlock title="Raw JSON" data={credential} />,
+    },
+    {
+      key: '3',
+      label: 'Rendered',
+      children: <CredentialRender credential={credential} hash={hash} />,
+    },
+  ]
+  if (
+    hash &&
+    Array.isArray(credential.type) &&
+    credential.type.includes('StudentVisaGrant')
+  ) {
+    tabs.push({
+      key: '4',
+      label: 'Apple wallet',
+      children: <CredentialAppleWallet hash={hash} />,
+    })
+  }
+
+  return <Tabs items={tabs} />
 }
 
 export default CredentialTabs

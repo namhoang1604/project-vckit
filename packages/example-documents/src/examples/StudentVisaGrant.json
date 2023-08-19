@@ -6,7 +6,7 @@
     "https://w3id.org/security/suites/jws-2020/v1",
     "https://dev-render-method-context.s3.ap-southeast-1.amazonaws.com/dev-render-method-context.json"
   ],
-  "type": ["VerifiableCredential", "OpenAttestationCredential"],
+  "type": ["VerifiableCredential", "StudentVisaGrant"],
   "issuer": "did:web:localhost%3A4566:did-documents-bucket:jvtrkl45qubg",
   "issuanceDate": "2023-07-19T04:21:00.624Z",
   "credentialSubject": {
